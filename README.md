@@ -19,16 +19,6 @@ This tool gives students a clear answer to two questions:
 1. **What is missing in my resume for this role?**
 2. **What should I learn in the next two weeks to fix it?**
 
----
-
-## 📸 Screenshots
-
-| Input | Match score and missing skills | 2-week learning plan |
-| ----- | ------------------------------ | -------------------- |
-| ![Input](screenshots/01-input.png) | ![Result](screenshots/02-result.png) | ![Plan](screenshots/03-plan.png) |
-
----
-
 ## 🚀 Features
 
 * 📄 **PDF resume upload**
