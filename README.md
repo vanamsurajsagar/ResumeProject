@@ -1,102 +1,152 @@
-# 📄 AI Resume Matcher & Skill Gap Finder
+# 🎯 AI Resume Matcher & Skill Gap Finder
 
-An intelligent resume analysis web application built with **Python and Streamlit** that compares a candidate's resume with a given job description.
+> Find out what is missing in your resume and what to learn next.
 
-The application extracts text from a PDF resume, calculates an **ATS-style similarity score** using **CountVectorizer and Cosine Similarity**, and identifies important skills mentioned in the job description that are missing from the resume.
+A web application built with **Python and Streamlit** that compares a student's resume with an internship or job description, shows the **match score**, lists the **missing skills**, and creates a simple **2-week learning plan** to close the gap.
+
+**🔗 Live demo:** [ADD YOUR STREAMLIT LINK HERE](https://share.streamlit.io)
+
+---
+
+## 🌍 Why this project
+
+This project supports **UN Sustainable Development Goal 8: Decent Work and Economic Growth**.
+
+Many students apply for internships and are not shortlisted, but they never find out why. They often do not know which skills a role really asks for, and free learning resources are scattered, so they do not know what to learn first.
+
+This tool gives students a clear answer to two questions:
+
+1. **What is missing in my resume for this role?**
+2. **What should I learn in the next two weeks to fix it?**
+
+---
+
+## 📸 Screenshots
+
+| Input | Match score and missing skills | 2-week learning plan |
+| ----- | ------------------------------ | -------------------- |
+| ![Input](screenshots/01-input.png) | ![Result](screenshots/02-result.png) | ![Plan](screenshots/03-plan.png) |
 
 ---
 
 ## 🚀 Features
 
-* 📄 **PDF Resume Upload**
+* 📄 **PDF resume upload**
+  Upload a resume in PDF format. The text is extracted automatically with PyPDF2.
 
-  * Upload a resume in PDF format.
-  * Extract resume content automatically using PyPDF2.
+* 🎯 **ATS-style match score**
+  Compares the resume with the job description using CountVectorizer and cosine similarity, and shows a percentage score.
 
-* 🎯 **ATS Match Score**
+* 🚦 **Match status**
+  * 🟢 **70% and above:** Strong match
+  * 🟡 **40% to 69%:** Mid-range match
+  * 🔴 **Below 40%:** Low match
 
-  * Compares the resume with the job description.
-  * Uses text vectorization and cosine similarity to calculate a percentage-based match score.
+* 🔍 **Skill gap analysis**
+  Checks the job description against a predefined skill bank and lists the skills the job mentions that the resume does not.
 
-* 🔍 **Skill Gap Analysis**
+* 🗓️ **2-week learning plan** *(new)*
+  Turns the most important missing skills into a simple plan:
+  * **Week 1, Learn the basics:** a free resource for each skill.
+  * **Week 2, Build and update:** a small practice project for each skill.
 
-  * Checks the job description against a predefined skill bank.
-  * Identifies skills that appear in the job description but are not found in the resume.
-
-* 📊 **Match Status**
-
-  * Displays the result using different match levels:
-
-    * 🟢 **70%+** → Strong Match
-    * 🟡 **40–69%** → Mid-Range Match
-    * 🔴 **Below 40%** → Low Match
-
-* 💡 **Skill Suggestions**
-
-  * Highlights missing technical and professional keywords that could be relevant to the job description.
-
-* 🖥️ **Interactive Streamlit Interface**
-
-  * Simple and user-friendly web interface.
-  * Real-time analysis without requiring a separate backend.
+* 🎨 **Clean, colourful interface**
+  Score card with a colour-coded bar, skill chips, and a week-by-week plan.
 
 ---
 
-## 🧠 How It Works
-
-The application follows a simple NLP-based workflow:
+## 🧠 How it works
 
 ```text
-        ┌──────────────────────┐
-        │   Upload Resume PDF  │
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ Extract PDF Text     │
-        │     using PyPDF2     │
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ Enter Job Description│
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ CountVectorizer      │
-        │ Text Vectorization   │
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ Cosine Similarity    │
-        │ Calculate Match %    │
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ Skill Gap Analysis   │
-        └──────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │ Results & Suggestions│
-        └──────────────────────┘
+   Upload resume (PDF)         Paste job description
+            │                            │
+            ▼                            │
+   Extract text (PyPDF2)                 │
+            │                            │
+            └────────────┬───────────────┘
+                         ▼
+        CountVectorizer: text to numbers
+                         │
+                         ▼
+        Cosine similarity: match percentage
+                         │
+                         ▼
+        Skill gap analysis: skill bank check
+                         │
+                         ▼
+        2-week learning plan: top missing skills
+                         │
+                         ▼
+        Results: score, missing skills, plan
+```
+
+### Skill gap detection
+
+For every skill in the skill bank, the app checks:
+
+* Is the skill in the **job description**? If no, ignore it.
+* Is the skill in the **resume**? If yes, ignore it.
+* If it is in the job description but **not** in the resume, it is added to the missing skills.
+
+Skills are matched as whole words, so for example "java" is not wrongly found inside "javascript".
+
+### Building the learning plan
+
+1. The missing skills are ranked by how many times the job description mentions them.
+2. The top 4 are used. The rest are shown as "other missing skills for later".
+3. Each skill gets one free learning resource (Week 1) and one small project (Week 2).
+4. The plan reminds the student to add a skill to their resume **only if they really did the work**, then run the analysis again.
+
+---
+
+## 📊 Example output
+
+Tested with a real web developer internship description:
+
+```text
+Overall Match: 27.4%  (Low match)
+
+Missing skills: JavaScript, React, Django
+
+Week 1: Learn the basics
+  JavaScript: javascript.info
+  React:      react.dev Learn
+  Django:     Official Django tutorial
+
+Week 2: Build and update
+  JavaScript: Build a simple calculator web page
+  React:      Build a small to-do app in React
+  Django:     Build the polls app from the tutorial
 ```
 
 ---
 
-## ⚙️ Technologies Used
+## ⚙️ Technologies used
 
 | Technology            | Purpose                                                |
 | --------------------- | ------------------------------------------------------ |
 | **Python**            | Core programming language                              |
-| **Streamlit**         | Web application and UI                                 |
+| **Streamlit**         | Web application and interface                          |
 | **PyPDF2**            | PDF text extraction                                    |
 | **Scikit-learn**      | Text vectorization and similarity calculation          |
 | **CountVectorizer**   | Converts text into numerical vectors                   |
-| **Cosine Similarity** | Measures similarity between resume and job description |
+| **Cosine similarity** | Measures similarity between resume and job description |
+
+---
+
+## 🧩 Skill bank
+
+The app currently checks these skills:
+
+| Category               | Skills                                                      |
+| ---------------------- | ----------------------------------------------------------- |
+| Programming            | Python, Java, C++, JavaScript                               |
+| Data and AI/ML         | Machine Learning, Data Analysis, TensorFlow, PyTorch, Excel, Tableau, Power BI |
+| Web development        | HTML, CSS, React, Django, Flask, API, REST                  |
+| Cloud and DevOps       | AWS, Cloud, Docker, Kubernetes                              |
+| Databases              | SQL, NoSQL                                                  |
+| Tools                  | Git, GitHub, Linux                                          |
+| Professional skills    | Communication, Leadership, Project Management, Agile, Scrum |
 
 ---
 
@@ -108,289 +158,88 @@ The application follows a simple NLP-based workflow:
 git clone https://github.com/vanamsurajsagar/ResumeProject.git
 ```
 
-### 2. Navigate to the project directory
+### 2. Go to the project folder
 
 ```bash
 cd ResumeProject
 ```
 
-### 3. Install dependencies
-
-```bash
-pip install streamlit PyPDF2 scikit-learn
-```
-
-Or, if a `requirements.txt` file is available:
+### 3. Install the dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## ▶️ Run the Application
-
-Start the Streamlit application using:
+### 4. Run the application
 
 ```bash
 streamlit run app.py
 ```
 
-Then open the local URL provided by Streamlit in your browser.
+Then open the local URL shown in the terminal.
 
 ---
 
-## 🖥️ Application Workflow
+## 🖥️ How to use
 
-### Step 1 — Upload Resume
-
-Upload your resume in **PDF format**.
-
-### Step 2 — Add Job Description
-
-Paste the complete job description into the text area.
-
-### Step 3 — Analyze
-
-Click:
-
-```text
-Analyze Match
-```
-
-The application processes both inputs and performs the analysis.
-
-### Step 4 — View Results
-
-The application displays:
-
-* ATS Match Score
-* Match Status
-* Missing Skills
-* Skill Suggestions
+1. **Paste** the job or internship description.
+2. **Upload** your resume as a PDF.
+3. Click **Run Full Analysis**.
+4. Read your **match score**, **missing skills** and **2-week learning plan**.
 
 ---
 
-## 📊 Example Output
-
-```text
-ATS Match Score
-       68.42%
-
-Match Status
-⚠️ Mid-Range Match.
-Consider adding more relevant keywords.
-
-Skill Suggestions
-
-• AWS
-• Docker
-• Kubernetes
-• REST
-```
-
----
-
-## 🧩 Skill Bank
-
-The current application checks a predefined set of skills, including:
-
-### Programming
-
-* Python
-* Java
-* C++
-* JavaScript
-
-### Data & AI/ML
-
-* Machine Learning
-* Data Analysis
-* TensorFlow
-* PyTorch
-
-### Web Development
-
-* HTML
-* CSS
-* React
-* Django
-* Flask
-
-### Cloud & DevOps
-
-* AWS
-* Docker
-* Kubernetes
-* Cloud
-
-### Databases
-
-* SQL
-* NoSQL
-
-### Tools
-
-* Git
-* GitHub
-* Linux
-
-### Professional Skills
-
-* Communication
-* Leadership
-* Project Management
-* Agile
-* Scrum
-
----
-
-## 🧮 Similarity Calculation
-
-The project uses **CountVectorizer** to convert the resume and job description into numerical representations.
-
-Then **Cosine Similarity** is used to measure how similar the two text documents are.
-
-Conceptually:
-
-```text
-Resume Text
-     +
-Job Description
-     ↓
-CountVectorizer
-     ↓
-Numerical Vectors
-     ↓
-Cosine Similarity
-     ↓
-Similarity Score
-     ↓
-ATS Match Percentage
-```
-
-The resulting similarity value is converted into a percentage for easier interpretation.
-
----
-
-## 🔍 Skill Gap Detection
-
-The application maintains a predefined skill bank.
-
-For every skill:
-
-```text
-Is skill present in Job Description?
-              │
-          ┌───┴───┐
-         YES      NO
-          │
-          ▼
-Is skill present in Resume?
-          │
-      ┌───┴───┐
-     YES      NO
-      │        │
-      │        ▼
-      │   Add to Missing Skills
-      │
-      ▼
-    Ignore
-```
-
-This allows candidates to quickly identify keywords that may be worth addressing in their resume **when they accurately reflect their experience**.
-
----
-
-## 📁 Project Structure
+## 📁 Project structure
 
 ```text
 ResumeProject/
-│
-├── app.py
-├── README.md
-├── requirements.txt
-│
-└── Resume/
-    └── Resume.pdf
+├── app.py              # Streamlit app: logic and interface
+├── requirements.txt    # Python dependencies
+├── README.md           # Project documentation
+└── screenshots/        # Images used in this README
 ```
-
-> Update the structure above if your actual filenames or folders are different.
-
----
-
-## 🎯 Project Objective
-
-The goal of this project is to demonstrate how **Natural Language Processing (NLP)** and **Machine Learning techniques** can be applied to a practical recruitment-related problem.
-
-It provides a simple way for candidates to compare their resumes against job descriptions and identify potential keyword or skill gaps.
-
----
-
-## 🔮 Future Improvements
-
-Possible improvements for future versions include:
-
-* 🤖 Use transformer-based NLP models such as BERT
-* 🧠 Add semantic similarity instead of only word-frequency similarity
-* 📑 Support DOCX resumes
-* 📝 Generate resume improvement suggestions
-* 🎯 Categorize skills into technical and soft skills
-* 📊 Add detailed skill-match percentages
-* 🔎 Detect job responsibilities and required qualifications
-* 💼 Add multiple job-description comparison
-* 📈 Provide a detailed ATS analysis dashboard
-* ☁️ Deploy the application online
-* 🔐 Improve handling of uploaded resume data
 
 ---
 
 ## ⚠️ Limitations
 
-This project is an **ATS-style resume matching tool**, not a real commercial ATS system.
+This is an **ATS-style matching tool**, not a real commercial ATS. The score is an approximate indicator, not a measure of resume quality or hiring chances.
 
-The current implementation primarily relies on:
-
-* Word-frequency-based text representation
-* Cosine similarity
-* A predefined skill bank
-
-Therefore, the score should be treated as an **approximate similarity indicator**, rather than a definitive measure of resume quality or hiring probability.
+* The score uses word counts, so it does not understand meaning.
+* The skill bank is limited. Skills that are not in it, such as PHP, Angular or Node.js, are not detected yet.
+* Some short words, such as "rest", can match ordinary text and may be flagged by mistake.
+* The learning resources are a fixed list that was chosen by hand.
 
 ---
 
-## 📚 Learning Outcomes
+## 🔮 Future improvements
 
-Through this project, the following concepts are demonstrated:
+* Use a smarter skill extractor (NLP or an LLM) instead of a fixed skill bank
+* Use semantic similarity (for example BERT) instead of word counts only
+* Support DOCX resumes
+* Add more skills and learning resources, including regional-language resources
+* Personalise the plan to the student's current level and career goal
+* Send learning reminders by email or WhatsApp
+* Compare one resume against several job descriptions
 
-* Python programming
-* Streamlit application development
+---
+
+## 📚 What this project demonstrates
+
+* Python and Streamlit application development
 * PDF text extraction
-* Natural Language Processing fundamentals
-* Text vectorization
-* Cosine similarity
-* Keyword extraction
-* Basic resume-job matching
-* Building an interactive ML-based web application
+* Text vectorization and cosine similarity
+* Keyword-based skill extraction
+* Turning analysis results into a practical, actionable plan
 
 ---
 
 ## 👨‍💻 Author
 
 **Vanam Surajsagar**
+B.Tech, Computer Science & Engineering (AI & ML)
 
-B.Tech – Computer Science & Engineering
-Specialization: Artificial Intelligence & Machine Learning
-
-### GitHub
-
-https://github.com/vanamsurajsagar
-
----
-
-## ⭐ Project
-
-If you find this project useful or interesting, consider giving the repository a ⭐ on GitHub.
+GitHub: [github.com/vanamsurajsagar](https://github.com/vanamsurajsagar)
 
 ---
 
