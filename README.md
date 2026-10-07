@@ -4,7 +4,7 @@
 
 A web application built with **Python and Streamlit** that compares a student's resume with an internship or job description, shows the **match score**, lists the **missing skills**, and creates a simple **2-week learning plan** to close the gap.
 
-**🔗 Live demo:** [ADD YOUR STREAMLIT LINK HERE](https://share.streamlit.io)
+**🔗 Live demo:** https://resumeproject.streamlit.app/
 
 ---
 
